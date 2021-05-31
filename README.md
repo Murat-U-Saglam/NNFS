@@ -14,3 +14,5 @@ p4.py - Batches, Layers and Objects, scaling the implementation to work in batch
 p5.py - Rectified Linear activation, piecewise function in order to focus on non-negative values
 
 p6.py - Softmax activation, Which is the exponentiation and normalisation of the data
+
+p7.py - Calculating loss via Categorical cross entropy, this is a method of calculating the amount of loss needeed for a score with a varying confidence level. Less confident we are, the more loss required.
