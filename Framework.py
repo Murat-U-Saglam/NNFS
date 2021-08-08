@@ -25,6 +25,25 @@ class Activation_Softmax:
         probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
         self.output = probabilities
 
+class Loss:
+    def calculate(self, output, y):         #y is intedended target value
+        sample_loss = self.forward(output, y)
+        data_loss = np.mean(sample_loss)
+        return data_loss
+
+class Loss_CategoricalCrossentropy(Loss):       #Inheret the Loss class
+    def forward(self, y_pred, y_true):          #y_true target training value
+        sample = len(y_pred)
+        y_pred_clipped = np.clip(y_pred, 1e-7, 1-1e-7) #Clip range to take into account for 0
+
+        if len(y_true.shape) == 1:                  #passed in scalar values not 1 hot encoded
+            correct_confidences = y_pred_clipped[range(sample)]
+        elif len(y_true.shape) == 2:                # Multiple each individual element which is a 2d array of this for example [[1, 0],[0, 1]] 
+            correct_confidences = np.sum(y_pred_clipped * y_true, axis=1)
+
+        negative_log_likelihoods = -np.log(correct_confidences)
+        return(negative_log_likelihoods)
+
 
 X, y = spiral_data(samples=100, classes=3)
 
@@ -41,3 +60,8 @@ dense2.forward(activation1.output)
 activation2.forward(dense2.output)
 
 print(activation2.output[:5])
+
+loss_function = Loss_CategoricalCrossentropy()
+loss = loss_function.calculate(activation2.output, y)
+
+print("Loss: ", loss)
